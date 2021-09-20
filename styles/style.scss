@@ -1,7 +1,10 @@
 // Overridden variables //
+$enable-negative-margins: true;
+
 $font-family-sans-serif:      system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", Lato, "DM Sans", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
 :focus { outline-color: #d04f4f; }
+::placeholder { color: #adadad; }
 
 #heading {
   color: #d04f4f;
@@ -15,9 +18,13 @@ $font-family-sans-serif:      system-ui, -apple-system, "Segoe UI", Roboto, "Hel
   border-radius: .3rem;
   background-color: #e7e7e7;
   font-family: Lato;
-}
+  font-size: 1.2rem;
 
-::placeholder { color: #adadad; }
+  &__icon { 
+    width: fit-content;
+    font-size: 2em 
+  }
+}
 
 // Imported SCSS Bootstrap file
 @import '../node_modules/bootstrap/scss/bootstrap.scss';
