@@ -16,7 +16,8 @@
   <link href="styles/style.css" rel="stylesheet">
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- JS files & page title-->
-  <script src="regular_algo.js" defer></script>
+  <script src="recipes.js" type="module" defer></script>
+  <script src="regular_algo.js" type="module" defer></script>
   <title>Les petits plats</title>
 </head>
 
@@ -39,6 +40,32 @@
       <i class="fas fa-search position-absolute pe-3 top-50 end-0 translate-middle-y" id="searchbar__icon"></i>
     </div>
   </section>
+
+  <!-- Searchbar alert query 'Not found' -->
+  <div class="container my-2 d-none">
+    <div class="row">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <h5 class="alert-heading mb-1">Aucune recette ne correspond à votre critère...</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <p class="mb-0">Vous pouvez chercher "tarte aux pommes", "poisson", ect.</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Advanced search -->
+  <div class="container">
+    <div class="row">
+      
+    </div>
+  </div>
+
+  <!-- Displayed recipe grid -->
+  <div class="container">
+    <div id="main-grid" class="row row-cols-3 g-5 mb-5">
+
+    
+    </div>
+  </div>
 
 </body>
 </html>
