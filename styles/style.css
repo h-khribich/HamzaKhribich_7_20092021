@@ -45,6 +45,18 @@
   font-family: Lato;
 }
 
+.recipe {
+  -webkit-transition: -webkit-transform .2s ease-in-out;
+  transition: -webkit-transform .2s ease-in-out;
+  transition: transform .2s ease-in-out;
+  transition: transform .2s ease-in-out, -webkit-transform .2s ease-in-out;
+}
+
+.recipe:hover {
+  -webkit-transform: scale(1.015);
+          transform: scale(1.015);
+}
+
 .recipe__time {
   font-size: 1.1em;
   font-weight: bold;
@@ -58,11 +70,15 @@
   font-size: .75em;
 }
 
+.recipe__ingredients {
+  list-style: none;
+}
+
 .recipe__description {
   font-family: Roboto, sans-serif;
   display: -webkit-box;
-  -webkit-box-orient: vertical;
   -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 

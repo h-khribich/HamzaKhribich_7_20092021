@@ -33,6 +33,9 @@ $h5-font-size: 1.2em;
 }
 
 .recipe {
+  transition: transform .2s ease-in-out;
+  &:hover { transform: scale(1.015); }
+
   &__time {
     font-size: 1.1em;
     font-weight: bold;
@@ -42,12 +45,14 @@ $h5-font-size: 1.2em;
 
   &__text { font-size: .75em; }
 
+  &__ingredients{ list-style: none; }
+
   &__description {
     font-family: Roboto, sans-serif;
     // Line clamping
     display: -webkit-box;
-    -webkit-box-orient: vertical;
     -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;  
     overflow: hidden;
   }
 }
