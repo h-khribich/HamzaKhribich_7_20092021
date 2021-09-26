@@ -1,46 +1,47 @@
 /* --- General --- */
-import { recipes } from './recipes.js';
+import { recipes } from './recipes.js'
 
 /* --- DOM Selection --- */
-const mainGrid = document.getElementById('main-grid');
+const mainGrid = document.getElementById('main-grid')
+const btnComponent = document.querySelectorAll('.btn-component')
 
 /* --- Displaying recipe cards --- */
+
 // Loop through recipe object to display relevant info, then a second loop through ingredients to display them correctly
 for (let i = 0; i < recipes.length; i++) {
-  
   // Ingredients object within recipe object
-  let ingredientsList = recipes[i].ingredients;
+  const ingredientsList = recipes[i].ingredients
   // Variable to be filled with relevant li elements as ul children in mainGrid template literal
-  let ingredients = '';
+  let ingredients = ''
 
   for (let j = 0; j < ingredientsList.length; j++) {
-    let quantity = ingredientsList[j].quantity;
-    let unit = ingredientsList[j].unit;
+    const quantity = ingredientsList[j].quantity
+    let unit = ingredientsList[j].unit
     // Converting units to abbreviated form
-    if (unit == 'grammes') { unit = 'g'} else if (unit == 'litres') { unit = 'l'};
+    if (unit === 'grammes') { unit = 'g' } else if (unit === 'litres') { unit = 'l' }
 
-    let ingredientName = `<strong>${ingredientsList[j].ingredient}</strong>`;
-    
-      // If ingredient's unit is not metric, display with a space (eg. pain: 2 tranches)
-      if (quantity && unit && (unit.length > 2)) {
-      ingredients += `<li>${ingredientName}: ${quantity} ${unit}</li>`;
+    const ingredientName = `<strong>${ingredientsList[j].ingredient}</strong>`
+
+    // If ingredient's unit is not metric, display with a space (eg. pain: 2 tranches)
+    if (quantity && unit && (unit.length > 2)) {
+      ingredients += `<li>${ingredientName}: ${quantity} ${unit}</li>`
 
       // If unit is metric, display without a space (eg. lait: 4ml)
     } else if (quantity && unit && (unit.length <= 2)) {
-      ingredients += `<li>${ingredientName}: ${quantity}${unit}</li>`;
+      ingredients += `<li>${ingredientName}: ${quantity}${unit}</li>`
 
       // If no unit is available, display only quantity (eg. oignon: 1)
     } else if (quantity) {
-      ingredients += `<li>${ingredientName}: ${quantity}</li>`;
+      ingredients += `<li>${ingredientName}: ${quantity}</li>`
 
       // Else, display ingredient only (eg. huile d'olive)
     } else {
-      ingredients += `<li>${ingredientName}</li>`;
+      ingredients += `<li>${ingredientName}</li>`
     }
   }
 
   // Recipe card HTML code injected
-  mainGrid.innerHTML += 
+  mainGrid.innerHTML +=
   `<!-- Recipe card -->
       <div class="col">
         <div class="card h-100 shadow-sm recipe">
@@ -56,5 +57,50 @@ for (let i = 0; i < recipes.length; i++) {
             </div>
           </div>
         </div>
-      </div>`;
+      </div>`
 }
+
+/* --- Button component --- */
+
+// Opening and closing advanced search button
+btnComponent.forEach((btn) => {
+  const btnName = btn.querySelector('.btn-component__name')
+  const btnInput = btn.querySelector('.btn-component__input')
+  const btnList = btn.querySelector('.btn-component__list')
+  const btnArrow = btn.querySelector('.btn-component__arrow')
+
+  btnArrow.addEventListener('click', () => {
+    btn.classList.toggle('btn-active')
+    btnName.classList.toggle('d-none')
+    btnInput.classList.toggle('d-none')
+    btnList.classList.toggle('d-none')
+  })
+  /*
+  const open = () => {
+    btn.classList.add('btn-active')
+    btnName.classList.add('d-none')
+    btnInput.classList.remove('d-none')
+    btnList.classList.remove('d-none')
+    console.log('opened')
+  }
+  const close = () => {
+    btn.classList.remove('btn-active')
+    btnName.classList.remove('d-none')
+    btnInput.classList.add('d-none')
+    btnList.classList.add('d-none')
+    console.log('closed')
+  }
+
+  btn.addEventListener('click', () => {
+    if (!btn.classList.contains('btn-active')) {
+      open()
+    }
+  })
+
+  btnArrow.addEventListener('click', () => {
+    if (btn.classList.contains('btn-active')) {
+      close()
+    }
+  })
+  */
+})

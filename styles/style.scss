@@ -45,17 +45,61 @@ $h5-font-size: 1.2em;
 
   &__text { font-size: .75em; }
 
-  &__ingredients{ list-style: none; }
+  &__ingredients{ 
+    list-style: none;
+    line-height: 16px;
+  }
 
   &__description {
     font-family: Roboto, sans-serif;
+    line-height: 13px;
+    height: 100%;
     // Line clamping
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
     display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;  
     overflow: hidden;
   }
 }
+
+.btn-container {
+  position: relative;
+  // Height of children buttons
+  height: 60px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 1.2em;
+}
+
+.btn-active { 
+  flex: 1;
+  .btn-component__arrow { transform: rotate(600grad); }
+}
+
+.btn-component {
+  min-width: 170px;
+  width: fit-content;
+  font-family: Lato;
+  font-size: 1.1em;
+  border: none;
+  background-color: #3282f7;
+  transition: all .5s ease-in-out;
+
+  &__arrow { 
+    vertical-align: baseline;
+    transition: all .7s ease-in-out;
+  };
+
+  &__input { 
+    width: 250px;
+    border: none;
+    background: transparent;
+  }
+}
+
+
 
 // Imported SCSS Bootstrap file
 @import '../node_modules/bootstrap/scss/bootstrap.scss';

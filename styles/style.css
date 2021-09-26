@@ -72,14 +72,68 @@
 
 .recipe__ingredients {
   list-style: none;
+  line-height: 16px;
 }
 
 .recipe__description {
   font-family: Roboto, sans-serif;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
+  line-height: 13px;
+  height: 100%;
+  -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
+  display: -webkit-box;
   overflow: hidden;
+}
+
+.btn-container {
+  position: relative;
+  height: 60px;
+  z-index: 5;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  gap: 1.2em;
+}
+
+.btn-active {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.btn-active .btn-component__arrow {
+  -webkit-transform: rotate(600grad);
+          transform: rotate(600grad);
+}
+
+.btn-component {
+  min-width: 170px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-family: Lato;
+  font-size: 1.1em;
+  border: none;
+  background-color: #3282f7;
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+}
+
+.btn-component__arrow {
+  vertical-align: baseline;
+  -webkit-transition: all .7s ease-in-out;
+  transition: all .7s ease-in-out;
+}
+
+.btn-component__input {
+  width: 250px;
+  border: none;
+  background: transparent;
 }
 
 /*!
