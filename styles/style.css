@@ -101,9 +101,9 @@
 }
 
 .btn-active {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -webkit-box-flex: .8;
+      -ms-flex: .8;
+          flex: .8;
 }
 
 .btn-active .btn-component__arrow {
@@ -116,10 +116,12 @@
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
+  max-height: 397px;
+  overflow: scroll;
   font-family: Lato;
+  color: #fff;
   font-size: 1.1em;
   border: none;
-  background-color: #3282f7;
   -webkit-transition: all .5s ease-in-out;
   transition: all .5s ease-in-out;
 }
@@ -131,9 +133,72 @@
 }
 
 .btn-component__input {
-  width: 250px;
+  width: 90%;
   border: none;
+  color: #fff;
+  font-weight: bold;
   background: transparent;
+  outline: none;
+}
+
+.btn-component__input::-webkit-input-placeholder {
+  color: #fff;
+  opacity: 50%;
+  font-weight: 700;
+}
+
+.btn-component__input:-ms-input-placeholder {
+  color: #fff;
+  opacity: 50%;
+  font-weight: 700;
+}
+
+.btn-component__input::-ms-input-placeholder {
+  color: #fff;
+  opacity: 50%;
+  font-weight: 700;
+}
+
+.btn-component__input::placeholder {
+  color: #fff;
+  opacity: 50%;
+  font-weight: 700;
+}
+
+.btn-component__list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  padding-left: .6em;
+  row-gap: .4em;
+  -webkit-column-gap: 1.3em;
+          column-gap: 1.3em;
+}
+
+.btn-component__list .list-item {
+  display: inline-block;
+  width: 30%;
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#btn-ingredients {
+  background-color: #3282f7;
+}
+
+#btn-appliances {
+  background-color: #68d9a4;
+}
+
+#btn-utensils {
+  background-color: #Ed6454;
 }
 
 /*!

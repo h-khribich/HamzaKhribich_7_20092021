@@ -74,17 +74,19 @@ $h5-font-size: 1.2em;
 }
 
 .btn-active { 
-  flex: 1;
+  flex: .8;
   .btn-component__arrow { transform: rotate(600grad); }
 }
 
 .btn-component {
   min-width: 170px;
   width: fit-content;
+  max-height: 397px;
+  overflow: scroll;
   font-family: Lato;
+  color: #fff;
   font-size: 1.1em;
   border: none;
-  background-color: #3282f7;
   transition: all .5s ease-in-out;
 
   &__arrow { 
@@ -93,12 +95,42 @@ $h5-font-size: 1.2em;
   };
 
   &__input { 
-    width: 250px;
+    width: 90%;
     border: none;
+    color: #fff;
+    font-weight: bold;
     background: transparent;
+    outline: none;
+
+    &::placeholder {
+      color: #fff;
+      opacity: 50%;
+      font-weight: 700;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-left: .6em;
+    row-gap: .4em;
+    column-gap: 1.3em;
+
+    .list-item {
+      display: inline-block;
+      width: 30%;
+      text-align: left;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 }
 
+#btn-ingredients { background-color: #3282f7; }
+#btn-appliances { background-color: #68d9a4; }
+#btn-utensils { background-color: #Ed6454; }
 
 
 // Imported SCSS Bootstrap file

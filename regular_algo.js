@@ -4,6 +4,14 @@ import { recipes } from './recipes.js'
 /* --- DOM Selection --- */
 const mainGrid = document.getElementById('main-grid')
 const btnComponent = document.querySelectorAll('.btn-component')
+const ingredientsBtnList = document.querySelector('.ingredients-list')
+const appliancesBtnList = document.querySelector('.appliances-list')
+const utensilsBtnList = document.querySelector('.utensils-list')
+
+/* --- Button lists arrays --- */
+const ingredientsArray = []
+const appliancesArray = []
+const utensilsArray = []
 
 /* --- Displaying recipe cards --- */
 
@@ -103,4 +111,47 @@ btnComponent.forEach((btn) => {
     }
   })
   */
+})
+
+/* --- Filling button lists --- */
+
+// Ingredients button
+recipes.forEach((recipe) => {
+  recipe.ingredients.forEach((obj) => {
+    // Transform all to lowercase to eliminated differently spelled similar words
+    let ingredient = obj.ingredient.toLowerCase()
+    ingredient = ingredient.replace(ingredient[0], ingredient[0].toUpperCase())
+
+    // Push ingredients in array to check for duplicates then push in appropriate list
+    if (!ingredientsArray.includes(ingredient)) {
+      ingredientsArray.push(ingredient)
+      ingredientsBtnList.innerHTML += `<li class="list-item">${ingredient}</li>`
+    }
+  })
+})
+
+// Appliances button
+recipes.forEach((recipe) => {
+  let appliance = recipe.appliance
+  // Transform all to lowercase to eliminated differently spelled similar words
+  appliance = appliance.toLowerCase()
+  appliance = appliance.replace(appliance[0], appliance[0].toUpperCase())
+
+  if (!appliancesArray.includes(appliance)) {
+    appliancesArray.push(appliance)
+    appliancesBtnList.innerHTML += `<li class="list-item">${appliance}</li>`
+  }
+})
+
+// Appliances button
+recipes.forEach((recipe) => {
+  recipe.ustensils.forEach((item) => {
+    let utensil = item.toLowerCase()
+    utensil = utensil.replace(utensil[0], utensil[0].toUpperCase())
+
+    if (!utensilsArray.includes(utensil)) {
+      utensilsArray.push(utensil)
+      utensilsBtnList.innerHTML += `<li class="list-item">${utensil}</li>`
+    }
+  })
 })
