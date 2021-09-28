@@ -78,14 +78,14 @@ btnComponent.forEach((btn) => {
   const btnArrow = btn.querySelector('.btn-component__arrow')
 
   // Opening and closing buttons
-  const open = () => {
+  const openBtn = () => {
     btn.classList.add('btn-active')
     btnName.classList.add('d-none')
     btnInput.classList.remove('d-none')
     btnList.classList.remove('d-none')
   }
 
-  const close = () => {
+  const closeBtn = () => {
     btn.classList.remove('btn-active')
     btnName.classList.remove('d-none')
     btnInput.classList.add('d-none')
@@ -93,11 +93,19 @@ btnComponent.forEach((btn) => {
   }
 
   // Button click event can only open button (otherwise some clickable elements ie. tags would close it)
-  btn.addEventListener('click', () => { open() })
+  btn.addEventListener('click', () => {
+    // Clicking anywhere beyond the button closes it
+    document.addEventListener('click', (event) => {
+      if (!btn.contains(event.target) && btn.classList.contains('btn-active')) { closeBtn() }
+    })
+
+    openBtn()
+  })
 
   // Arrow can open or close button depending on parent button
   btnArrow.addEventListener('click', (event) => {
-    btn.classList.contains('btn-active') ? close() : open()
+    btn.classList.contains('btn-active') ? closeBtn() : openBtn()
+    // Prevent arrow click from propagating and activating button
     event.stopPropagation()
   })
 })
