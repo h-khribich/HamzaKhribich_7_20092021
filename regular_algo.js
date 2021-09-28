@@ -1,19 +1,19 @@
-/* --- General --- */
+/* --- GENERAL --- */
 import { recipes } from './recipes.js'
 
-/* --- DOM Selection --- */
+/* --- DOM SELECTION --- */
 const mainGrid = document.getElementById('main-grid')
 const btnComponent = document.querySelectorAll('.btn-component')
 const ingredientsBtnList = document.querySelector('.ingredients-list')
 const appliancesBtnList = document.querySelector('.appliances-list')
 const utensilsBtnList = document.querySelector('.utensils-list')
 
-/* --- Button lists arrays --- */
-const ingredientsArray = []
-const appliancesArray = []
-const utensilsArray = []
+/* --- BUTTON LISTS ARRAYS --- */
+let ingredientsArray = []
+let appliancesArray = []
+let utensilsArray = []
 
-/* --- Displaying recipe cards --- */
+/* --- DISPLAYING RECIPE CARDS --- */
 
 // Loop through recipe object to display relevant info, then a second loop through ingredients to display them correctly
 for (let i = 0; i < recipes.length; i++) {
@@ -51,7 +51,7 @@ for (let i = 0; i < recipes.length; i++) {
   // Recipe card HTML code injected
   mainGrid.innerHTML +=
   `<!-- Recipe card -->
-      <div class="col">
+      <div class="col recipe-card">
         <div class="card h-100 shadow-sm recipe">
           <img src="assets/recipe_background.png" class="card-img-top" alt="">
           <div class="card-body">
@@ -68,7 +68,7 @@ for (let i = 0; i < recipes.length; i++) {
       </div>`
 }
 
-/* --- Button component --- */
+/* --- BUTTON COMPONENT --- */
 
 // Opening and closing advanced search button
 btnComponent.forEach((btn) => {
@@ -77,7 +77,7 @@ btnComponent.forEach((btn) => {
   const btnList = btn.querySelector('.btn-component__list')
   const btnArrow = btn.querySelector('.btn-component__arrow')
 
-  // Opening and closing buttons
+  // Opening and closing functions
   const openBtn = () => {
     btn.classList.add('btn-active')
     btnName.classList.add('d-none')
@@ -110,7 +110,7 @@ btnComponent.forEach((btn) => {
   })
 })
 
-/* --- Filling button lists --- */
+/* --- FILLING BUTTON LISTS --- */
 
 // Ingredients button
 recipes.forEach((recipe) => {
@@ -119,13 +119,17 @@ recipes.forEach((recipe) => {
     let ingredient = obj.ingredient.toLowerCase()
     ingredient = ingredient.replace(ingredient[0], ingredient[0].toUpperCase())
 
-    // Push ingredients in array to check for duplicates then push in appropriate list
-    if (!ingredientsArray.includes(ingredient)) {
-      ingredientsArray.push(ingredient)
-      ingredientsBtnList.innerHTML += `<li class="list-item">${ingredient}</li>`
-    }
+    // Check ingredients in array for duplicates then push in appropriate list
+    if (!ingredientsArray.includes(ingredient)) { ingredientsArray.push(ingredient) }
   })
 })
+
+// Sorting ingredients according to french rules (accents) and displaying them
+ingredientsArray = ingredientsArray
+  .sort((a, b) => a.localeCompare(b))
+  .forEach((ingredient) => {
+    ingredientsBtnList.innerHTML += `<li class="list-item">${ingredient}</li>`
+  })
 
 // Appliances button
 recipes.forEach((recipe) => {
@@ -134,21 +138,28 @@ recipes.forEach((recipe) => {
   appliance = appliance.toLowerCase()
   appliance = appliance.replace(appliance[0], appliance[0].toUpperCase())
 
-  if (!appliancesArray.includes(appliance)) {
-    appliancesArray.push(appliance)
-    appliancesBtnList.innerHTML += `<li class="list-item">${appliance}</li>`
-  }
+  if (!appliancesArray.includes(appliance)) { appliancesArray.push(appliance) }
 })
 
-// Appliances button
+appliancesArray = appliancesArray
+  .sort((a, b) => a.localeCompare(b))
+  .forEach((appliance) => {
+    appliancesBtnList.innerHTML += `<li class="list-item">${appliance}</li>`
+  })
+
+// Utensils button
 recipes.forEach((recipe) => {
   recipe.ustensils.forEach((item) => {
     let utensil = item.toLowerCase()
     utensil = utensil.replace(utensil[0], utensil[0].toUpperCase())
 
-    if (!utensilsArray.includes(utensil)) {
-      utensilsArray.push(utensil)
-      utensilsBtnList.innerHTML += `<li class="list-item">${utensil}</li>`
-    }
+    if (!utensilsArray.includes(utensil)) { utensilsArray.push(utensil) }
   })
 })
+
+utensilsArray = utensilsArray
+  .sort((a, b) => a.localeCompare(b))
+  .forEach((utensil) => {
+    utensilsBtnList.innerHTML += `<li class="list-item">${utensil}</li>`
+  })
+
