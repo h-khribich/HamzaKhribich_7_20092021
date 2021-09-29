@@ -4,6 +4,7 @@ import { recipes } from './recipes.js'
 /* --- DOM SELECTION --- */
 const mainGrid = document.getElementById('main-grid')
 const btnComponent = document.querySelectorAll('.btn-component')
+const btnComponentInput = document.querySelectorAll('.btn-component__input')
 const ingredientsBtnList = document.querySelector('.ingredients-list')
 const appliancesBtnList = document.querySelector('.appliances-list')
 const utensilsBtnList = document.querySelector('.utensils-list')
@@ -112,6 +113,9 @@ btnComponent.forEach((btn) => {
 
 /* --- FILLING BUTTON LISTS --- */
 
+// Display list items
+const displayItem = (item) => `<li class="list-item">${item}</li>`
+
 // Ingredients button
 recipes.forEach((recipe) => {
   recipe.ingredients.forEach((obj) => {
@@ -125,10 +129,10 @@ recipes.forEach((recipe) => {
 })
 
 // Sorting ingredients according to french rules (accents) and displaying them
-ingredientsArray = ingredientsArray
+ingredientsArray
   .sort((a, b) => a.localeCompare(b))
   .forEach((ingredient) => {
-    ingredientsBtnList.innerHTML += `<li class="list-item">${ingredient}</li>`
+    ingredientsBtnList.innerHTML += displayItem(ingredient)
   })
 
 // Appliances button
@@ -141,10 +145,10 @@ recipes.forEach((recipe) => {
   if (!appliancesArray.includes(appliance)) { appliancesArray.push(appliance) }
 })
 
-appliancesArray = appliancesArray
+appliancesArray
   .sort((a, b) => a.localeCompare(b))
   .forEach((appliance) => {
-    appliancesBtnList.innerHTML += `<li class="list-item">${appliance}</li>`
+    appliancesBtnList.innerHTML += displayItem(appliance)
   })
 
 // Utensils button
@@ -157,9 +161,26 @@ recipes.forEach((recipe) => {
   })
 })
 
-utensilsArray = utensilsArray
+utensilsArray
   .sort((a, b) => a.localeCompare(b))
   .forEach((utensil) => {
-    utensilsBtnList.innerHTML += `<li class="list-item">${utensil}</li>`
+    utensilsBtnList.innerHTML += displayItem(utensil)
   })
 
+// Input search event listner
+btnComponentInput.forEach((input) => {
+  const btnListItems = input.parentElement.parentElement.lastElementChild.childNodes
+
+  input.addEventListener('input', () => {
+    // Search regex with input value as parameter
+    const search = new RegExp(`(${input.value})`, 'i')
+
+    // Hide item if it does not correspond to search regex
+    btnListItems.forEach((item) => {
+      !search.test(item.innerText) ? item.classList.add('d-none') : item.classList.remove('d-none')
+
+      // Show all items when input field is empty
+      if (input.value === '' && item.classList.contains('d-none')) { item.classList.remove('d-none') }
+    })
+  })
+})
