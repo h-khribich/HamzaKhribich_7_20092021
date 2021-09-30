@@ -18,6 +18,11 @@
   color: #adadad;
 }
 
+a {
+  text-decoration: none !important;
+  color: #fff !important;
+}
+
 #heading {
   color: #d04f4f;
   font-family: 'DM Sans';
@@ -198,6 +203,56 @@
 }
 
 #btn-utensils {
+  background-color: #Ed6454;
+}
+
+.tag {
+  margin-right: .8em;
+  padding: .5em;
+  border-radius: 8px;
+}
+
+.tag__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  row-gap: .8em;
+}
+
+.tag__name {
+  color: #fff;
+  padding-left: .2em;
+  font-size: .9em;
+  font-weight: 500;
+}
+
+.tag__close-button {
+  background: transparent;
+  border: none;
+  vertical-align: baseline;
+}
+
+.tag__close-button img {
+  padding-bottom: 2px;
+}
+
+.tag__ingredients {
+  background-color: #3282f7;
+}
+
+.tag__appliances {
+  background-color: #68d9a4;
+}
+
+.tag__utensils {
   background-color: #Ed6454;
 }
 

@@ -7,12 +7,19 @@ $font-family-sans-serif: 'system-ui', -apple-system, "Segoe UI", Roboto, "Helvet
 ::placeholder { color: #adadad; }
 $h5-font-size: 1.2em;
 
+a { 
+  text-decoration: none !important;
+  color: #fff !important;
+}
+
+// Header
 #heading {
   color: #d04f4f;
   font-family: 'DM Sans';
   font-weight: bold;
 }
 
+// Searchbar
 #searchbar {
   height: 70px;
   border: transparent;
@@ -27,11 +34,13 @@ $h5-font-size: 1.2em;
   }
 }
 
+// Grid
 #main-grid {
   margin: 0 -2.1em; 
   font-family: Lato;
 }
 
+// Recipe cards
 .recipe {
   transition: transform .2s ease-in-out;
   &:hover { transform: scale(1.015); }
@@ -62,6 +71,7 @@ $h5-font-size: 1.2em;
   }
 }
 
+// Button component
 .btn-container {
   position: relative;
   // Height of children buttons
@@ -129,8 +139,46 @@ $h5-font-size: 1.2em;
 }
 
 #btn-ingredients { background-color: #3282f7; }
+
 #btn-appliances { background-color: #68d9a4; }
+
 #btn-utensils { background-color: #Ed6454; }
+
+// Tags
+.tag {
+  margin-right: .8em;
+  padding: .5em;
+  border-radius: 8px;
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    row-gap: .8em;
+  }
+
+  &__name {
+    color: #fff;
+    padding-left: .2em;
+    font-size: .9em;
+    font-weight: 500;
+  }
+
+  &__close-button {
+    background: transparent;
+    border: none;
+    vertical-align: baseline;
+
+    img { padding-bottom: 2px; }
+  }
+
+  &__ingredients { background-color: #3282f7; }
+
+  &__appliances { background-color: #68d9a4; }
+
+  &__utensils { background-color: #Ed6454; }
+}
 
 
 // Imported SCSS Bootstrap file

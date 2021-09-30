@@ -8,6 +8,8 @@ const btnComponentInput = document.querySelectorAll('.btn-component__input')
 const ingredientsBtnList = document.querySelector('.ingredients-list')
 const appliancesBtnList = document.querySelector('.appliances-list')
 const utensilsBtnList = document.querySelector('.utensils-list')
+const searchbar = document.getElementById('searchbar')
+const tagsContainer = document.querySelector('.tag__container')
 
 /* --- BUTTON LISTS ARRAYS --- */
 let ingredientsArray = []
@@ -99,7 +101,6 @@ btnComponent.forEach((btn) => {
     document.addEventListener('click', (event) => {
       if (!btn.contains(event.target) && btn.classList.contains('btn-active')) { closeBtn() }
     })
-
     openBtn()
   })
 
@@ -114,7 +115,7 @@ btnComponent.forEach((btn) => {
 /* --- FILLING BUTTON LISTS --- */
 
 // Display list items
-const displayItem = (item) => `<li class="list-item">${item}</li>`
+const displayItem = (item) => `<li class="list-item"><a href="#">${item}</a></li>`
 
 // Ingredients button
 recipes.forEach((recipe) => {
@@ -167,16 +168,57 @@ utensilsArray
     utensilsBtnList.innerHTML += displayItem(utensil)
   })
 
-// Input search event listner
+// Tag creation & input search event listner
 btnComponentInput.forEach((input) => {
-  const btnListItems = input.parentElement.parentElement.lastElementChild.childNodes
+  // Selecting appropriate sibling list
+  const btnListItems = input
+    .closest('.input-bloc')
+    .closest('.btn-component')
+    .querySelector('.btn-component__list')
+    .querySelectorAll('.list-item')
+
+  btnListItems.forEach((item) => {
+    // Adding tags on list item click
+    item.addEventListener('click', (event) => {
+      event.preventDefault()
+
+      // Check type of item so as to apply correct background color class
+      let tagType = ''
+      if (item.parentElement === ingredientsBtnList) {
+        tagType = 'tag__ingredients'
+      } else if (item.parentElement === appliancesBtnList) {
+        tagType = 'tag__appliances'
+      } else {
+        tagType = 'tag__utensils'
+      }
+
+      const newTag =
+      `<li class="tag ${tagType}">
+        <span class="tag__name">${item.innerText}</span>
+        <button class="tag__close-button">
+          <img src="assets/close-button.svg" alt="">
+        </button>
+      </li>`
+
+      tagsContainer.innerHTML += newTag
+
+      // Tag close button event
+      const tagCloseBtns = document.querySelectorAll('.tag > .tag__close-button')
+
+      tagCloseBtns.forEach((button) => {
+        button.addEventListener('click', () => {
+          button.closest('.tag').remove()
+        })
+      })
+    })
+  })
 
   input.addEventListener('input', () => {
     // Search regex with input value as parameter
     const search = new RegExp(`(${input.value})`, 'i')
 
-    // Hide item if it does not correspond to search regex
     btnListItems.forEach((item) => {
+      // Hide item if it does not correspond to search regex else, show item
       !search.test(item.innerText) ? item.classList.add('d-none') : item.classList.remove('d-none')
 
       // Show all items when input field is empty
@@ -184,3 +226,5 @@ btnComponentInput.forEach((input) => {
     })
   })
 })
+
+/* --- MAIN SEARCHBAR ALGORITHM --- */
