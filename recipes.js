@@ -1701,7 +1701,7 @@ export const recipes = [
               "quantity": 6
           },
           {
-              "ingredient": "Poudre d'amendes",
+              "ingredient": "Poudre d'amande",
               "quantity": 500,
               "unit": "grammes"
           },
@@ -1717,7 +1717,7 @@ export const recipes = [
           }
       ],
       "time": 60,
-      "description":"Préparer la frangipane : Mélanger le sucre la poudre d'amander, le beurre et les oeufs. Etaler la moitier de la pate feuilleté et mettre dans un moule à tarte. Garnir de frangipane et recouvrir du reste de pate feuilletée. Mettre au four 30 minutes",
+      "description":"Préparer la frangipane : Mélanger le sucre la poudre d'amande, le beurre et les oeufs. Etaler la moitier de la pate feuilleté et mettre dans un moule à tarte. Garnir de frangipane et recouvrir du reste de pate feuilletée. Mettre au four 30 minutes",
       "appliance": "Four",
       "ustensils":["rouleau à patisserie","fouet"]
   }

@@ -147,6 +147,7 @@ a {
 // Tags
 .tag {
   margin-right: .8em;
+  margin-top: 1.5em;
   padding: .5em;
   border-radius: 8px;
 
@@ -178,6 +179,23 @@ a {
   &__appliances { background-color: #68d9a4; }
 
   &__utensils { background-color: #Ed6454; }
+}
+
+.fade-out {
+  opacity: 0;
+  display: none;
+  animation: fade-out .3s ease-in-out;
+}
+
+@keyframes fade-out {
+  from {
+    display: block;
+  	opacity: 1;
+  }
+  to {
+ 	opacity: 0;
+   display: none;
+  }
 }
 
 

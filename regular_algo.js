@@ -10,6 +10,8 @@ const appliancesBtnList = document.querySelector('.appliances-list')
 const utensilsBtnList = document.querySelector('.utensils-list')
 const searchbar = document.getElementById('searchbar')
 const tagsContainer = document.querySelector('.tag__container')
+const queryAlert = document.querySelector('.query-alert')
+const displayedRecipesIds = []
 
 /* --- BUTTON LISTS ARRAYS --- */
 let ingredientsArray = []
@@ -54,7 +56,7 @@ for (let i = 0; i < recipes.length; i++) {
   // Recipe card HTML code injected
   mainGrid.innerHTML +=
   `<!-- Recipe card -->
-      <div class="col recipe-card">
+      <div class="col recipe-card" data-id="${recipes[i].id}">
         <div class="card h-100 shadow-sm recipe">
           <img src="assets/recipe_background.png" class="card-img-top" alt="">
           <div class="card-body">
@@ -69,6 +71,9 @@ for (let i = 0; i < recipes.length; i++) {
           </div>
         </div>
       </div>`
+
+  // Variable will be used to display relevant ingredients, appliances and utensils
+  displayedRecipesIds.push(recipes[i].id)
 }
 
 /* --- BUTTON COMPONENT --- */
@@ -117,16 +122,20 @@ btnComponent.forEach((btn) => {
 // Display list items
 const displayItem = (item) => `<li class="list-item"><a href="#">${item}</a></li>`
 
+console.log(displayedRecipesIds)
+
 // Ingredients button
 recipes.forEach((recipe) => {
-  recipe.ingredients.forEach((obj) => {
-    // Transform all to lowercase to eliminated differently spelled similar words
-    let ingredient = obj.ingredient.toLowerCase()
-    ingredient = ingredient.replace(ingredient[0], ingredient[0].toUpperCase())
+  if (displayedRecipesIds.includes(recipe.id)) {
+    recipe.ingredients.forEach((obj) => {
+      // Transform all to lowercase to eliminated differently spelled similar words
+      let ingredient = obj.ingredient.toLowerCase()
+      ingredient = ingredient.replace(ingredient[0], ingredient[0].toUpperCase())
 
-    // Check ingredients in array for duplicates then push in appropriate list
-    if (!ingredientsArray.includes(ingredient)) { ingredientsArray.push(ingredient) }
-  })
+      // Check ingredients in array for duplicates then push in appropriate list
+      if (!ingredientsArray.includes(ingredient)) { ingredientsArray.push(ingredient) }
+    })
+  }
 })
 
 // Sorting ingredients according to french rules (accents) and displaying them
@@ -138,12 +147,14 @@ ingredientsArray
 
 // Appliances button
 recipes.forEach((recipe) => {
-  let appliance = recipe.appliance
-  // Transform all to lowercase to eliminated differently spelled similar words
-  appliance = appliance.toLowerCase()
-  appliance = appliance.replace(appliance[0], appliance[0].toUpperCase())
+  if (displayedRecipesIds.includes(recipe.id)) {
+    let appliance = recipe.appliance
+    // Transform all to lowercase to eliminated differently spelled similar words
+    appliance = appliance.toLowerCase()
+    appliance = appliance.replace(appliance[0], appliance[0].toUpperCase())
 
-  if (!appliancesArray.includes(appliance)) { appliancesArray.push(appliance) }
+    if (!appliancesArray.includes(appliance)) { appliancesArray.push(appliance) }
+  }
 })
 
 appliancesArray
@@ -154,12 +165,14 @@ appliancesArray
 
 // Utensils button
 recipes.forEach((recipe) => {
-  recipe.ustensils.forEach((item) => {
-    let utensil = item.toLowerCase()
-    utensil = utensil.replace(utensil[0], utensil[0].toUpperCase())
+  if (displayedRecipesIds.includes(recipe.id)) {
+    recipe.ustensils.forEach((item) => {
+      let utensil = item.toLowerCase()
+      utensil = utensil.replace(utensil[0], utensil[0].toUpperCase())
 
-    if (!utensilsArray.includes(utensil)) { utensilsArray.push(utensil) }
-  })
+      if (!utensilsArray.includes(utensil)) { utensilsArray.push(utensil) }
+    })
+  }
 })
 
 utensilsArray
@@ -216,6 +229,7 @@ btnComponentInput.forEach((input) => {
   input.addEventListener('input', () => {
     // Search regex with input value as parameter
     const search = new RegExp(`(${input.value})`, 'i')
+    console.log(search)
 
     btnListItems.forEach((item) => {
       // Hide item if it does not correspond to search regex else, show item
@@ -227,4 +241,34 @@ btnComponentInput.forEach((input) => {
   })
 })
 
+const recipeCards = document.querySelectorAll('.recipe-card')
+
 /* --- MAIN SEARCHBAR ALGORITHM --- */
+searchbar.addEventListener('input', () => {
+  const mainSearch = new RegExp(`(${searchbar.value})`, 'i')
+
+  // Loop through cards to find search among children's innerText
+  for (let i = 0; i < recipeCards.length; i++) {
+    // Start after input of 3 characters
+    if (searchbar.value.length >= 3) {
+      const children = recipeCards[i].childNodes
+      let match = 0
+      // For each child in the card, if a match has not been made, hide the carde
+      for (let j = 0; j < children.length; j++) {
+        if (mainSearch.test(children[j].innerText)) { match++ }
+      }
+      if (match === 0) {
+        recipeCards[i].classList.add('fade-out')
+      } else {
+        recipeCards[i].classList.remove('fade-out')
+      }
+      // If input is empty, show all and remove query alert if need be
+    } else if (searchbar.value === '') {
+      if (recipeCards[i].classList.contains('fade-out')) { recipeCards[i].classList.remove('fade-out') }
+      queryAlert.classList.add('d-none')
+    }
+  }
+})
+// !!! EXPAND SEARCH TO UTENSILS !!!
+// Display alert when main grid is empty
+// Fix fade-out animation
