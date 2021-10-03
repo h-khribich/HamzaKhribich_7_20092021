@@ -260,30 +260,8 @@ a {
 .fade-out {
   opacity: 0;
   display: none;
-  -webkit-animation: fade-out .3s ease-in-out;
-          animation: fade-out .3s ease-in-out;
-}
-
-@-webkit-keyframes fade-out {
-  from {
-    display: block;
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    display: none;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    display: block;
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    display: none;
-  }
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
 }
 
 /*!

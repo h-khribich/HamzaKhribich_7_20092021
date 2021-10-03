@@ -241,6 +241,7 @@ btnComponentInput.forEach((input) => {
   })
 })
 
+// Selecting all recipe cards
 const recipeCards = document.querySelectorAll('.recipe-card')
 
 /* --- MAIN SEARCHBAR ALGORITHM --- */
@@ -252,23 +253,50 @@ searchbar.addEventListener('input', () => {
     // Start after input of 3 characters
     if (searchbar.value.length >= 3) {
       const children = recipeCards[i].childNodes
-      let match = 0
+
       // For each child in the card, if a match has not been made, hide the carde
+      let match = 0
       for (let j = 0; j < children.length; j++) {
         if (mainSearch.test(children[j].innerText)) { match++ }
       }
       if (match === 0) {
-        recipeCards[i].classList.add('fade-out')
+        recipeCards[i].classList.add('d-none')
       } else {
-        recipeCards[i].classList.remove('fade-out')
+        recipeCards[i].classList.remove('d-none')
+        recipeCards[i].animate([
+          {
+            opacity: 0
+          },
+          {
+            opacity: 1
+          }
+        ], 500, 'ease-in-out')
       }
       // If input is empty, show all and remove query alert if need be
     } else if (searchbar.value === '') {
-      if (recipeCards[i].classList.contains('fade-out')) { recipeCards[i].classList.remove('fade-out') }
-      queryAlert.classList.add('d-none')
+      if (recipeCards[i].classList.contains('d-none')) { recipeCards[i].classList.remove('d-none') }
     }
   }
+  // If no matches are found (all recipes hidden), display query alert
+  if (!mainGrid.querySelector('div.recipe-card:not(.d-none)')) {
+    queryAlert.classList.remove('d-none')
+    // Alert animation
+    queryAlert.animate([
+      {
+        opacity: 0,
+        transform: 'translateY(-60px)'
+      },
+      {
+        opacity: 1,
+        transform: 'translateY(0)'
+      }
+    ], {
+      duration: 550,
+      easing: 'ease-in-out'
+    })
+  } else {
+    queryAlert.classList.add('d-none')
+  }
 })
+
 // !!! EXPAND SEARCH TO UTENSILS !!!
-// Display alert when main grid is empty
-// Fix fade-out animation
