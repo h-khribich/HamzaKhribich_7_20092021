@@ -11,7 +11,7 @@ const utensilsBtnList = document.querySelector('.utensils-list')
 const searchbar = document.getElementById('searchbar')
 const tagsContainer = document.querySelector('.tag__container')
 const queryAlert = document.querySelector('.query-alert')
-const displayedRecipesIds = []
+let displayedRecipesIds = []
 
 /* --- BUTTON LISTS ARRAYS --- */
 let ingredientsArray = []
@@ -72,7 +72,6 @@ for (let i = 0; i < recipes.length; i++) {
         </div>
       </div>`
 
-  // Variable will be used to display relevant ingredients, appliances and utensils
   displayedRecipesIds.push(recipes[i].id)
 }
 
@@ -122,64 +121,75 @@ btnComponent.forEach((btn) => {
 // Display list items
 const displayItem = (item) => `<li class="list-item"><a href="#">${item}</a></li>`
 
-console.log(displayedRecipesIds)
+const fillBtnList = () => {
+  // Clearing lists for updating
+  ingredientsBtnList.innerHTML = ''
+  appliancesBtnList.innerHTML = ''
+  utensilsBtnList.innerHTML = ''
+  ingredientsArray = []
+  appliancesArray = []
+  utensilsArray = []
 
-// Ingredients button
-recipes.forEach((recipe) => {
-  if (displayedRecipesIds.includes(recipe.id)) {
-    recipe.ingredients.forEach((obj) => {
+  // Ingredients button
+  recipes.forEach((recipe) => {
+    if (displayedRecipesIds.includes(recipe.id)) {
+      recipe.ingredients.forEach((obj) => {
+        // Transform all to lowercase to eliminated differently spelled similar words
+        let ingredient = obj.ingredient.toLowerCase()
+        ingredient = ingredient.replace(ingredient[0], ingredient[0].toUpperCase())
+
+        // Check ingredients in array for duplicates then push in appropriate list
+        if (!ingredientsArray.includes(ingredient)) { ingredientsArray.push(ingredient) }
+      })
+    }
+  })
+
+  // Sorting ingredients according to french rules (accents) and displaying them
+  ingredientsArray
+    .sort((a, b) => a.localeCompare(b))
+    .forEach((ingredient) => {
+      ingredientsBtnList.innerHTML += displayItem(ingredient)
+    })
+
+  // Appliances button
+  recipes.forEach((recipe) => {
+    if (displayedRecipesIds.includes(recipe.id)) {
+      let appliance = recipe.appliance
       // Transform all to lowercase to eliminated differently spelled similar words
-      let ingredient = obj.ingredient.toLowerCase()
-      ingredient = ingredient.replace(ingredient[0], ingredient[0].toUpperCase())
+      appliance = appliance.toLowerCase()
+      appliance = appliance.replace(appliance[0], appliance[0].toUpperCase())
 
-      // Check ingredients in array for duplicates then push in appropriate list
-      if (!ingredientsArray.includes(ingredient)) { ingredientsArray.push(ingredient) }
+      if (!appliancesArray.includes(appliance)) { appliancesArray.push(appliance) }
+    }
+  })
+
+  appliancesArray
+    .sort((a, b) => a.localeCompare(b))
+    .forEach((appliance) => {
+      appliancesBtnList.innerHTML += displayItem(appliance)
     })
-  }
-})
 
-// Sorting ingredients according to french rules (accents) and displaying them
-ingredientsArray
-  .sort((a, b) => a.localeCompare(b))
-  .forEach((ingredient) => {
-    ingredientsBtnList.innerHTML += displayItem(ingredient)
+  // Utensils button
+  recipes.forEach((recipe) => {
+    if (displayedRecipesIds.includes(recipe.id)) {
+      recipe.ustensils.forEach((item) => {
+        let utensil = item.toLowerCase()
+        utensil = utensil.replace(utensil[0], utensil[0].toUpperCase())
+
+        if (!utensilsArray.includes(utensil)) { utensilsArray.push(utensil) }
+      })
+    }
   })
 
-// Appliances button
-recipes.forEach((recipe) => {
-  if (displayedRecipesIds.includes(recipe.id)) {
-    let appliance = recipe.appliance
-    // Transform all to lowercase to eliminated differently spelled similar words
-    appliance = appliance.toLowerCase()
-    appliance = appliance.replace(appliance[0], appliance[0].toUpperCase())
-
-    if (!appliancesArray.includes(appliance)) { appliancesArray.push(appliance) }
-  }
-})
-
-appliancesArray
-  .sort((a, b) => a.localeCompare(b))
-  .forEach((appliance) => {
-    appliancesBtnList.innerHTML += displayItem(appliance)
-  })
-
-// Utensils button
-recipes.forEach((recipe) => {
-  if (displayedRecipesIds.includes(recipe.id)) {
-    recipe.ustensils.forEach((item) => {
-      let utensil = item.toLowerCase()
-      utensil = utensil.replace(utensil[0], utensil[0].toUpperCase())
-
-      if (!utensilsArray.includes(utensil)) { utensilsArray.push(utensil) }
+  utensilsArray
+    .sort((a, b) => a.localeCompare(b))
+    .forEach((utensil) => {
+      utensilsBtnList.innerHTML += displayItem(utensil)
     })
-  }
-})
+}
 
-utensilsArray
-  .sort((a, b) => a.localeCompare(b))
-  .forEach((utensil) => {
-    utensilsBtnList.innerHTML += displayItem(utensil)
-  })
+// On load, fill buttons with already displayed items
+window.addEventListener('load', fillBtnList())
 
 // Tag creation & input search event listner
 btnComponentInput.forEach((input) => {
@@ -248,17 +258,32 @@ const recipeCards = document.querySelectorAll('.recipe-card')
 searchbar.addEventListener('input', () => {
   const mainSearch = new RegExp(`(${searchbar.value})`, 'i')
 
+  // Clear displayed recipes
+  displayedRecipesIds = []
+
   // Loop through cards to find search among children's innerText
   for (let i = 0; i < recipeCards.length; i++) {
     // Start after input of 3 characters
     if (searchbar.value.length >= 3) {
       const children = recipeCards[i].childNodes
 
-      // For each child in the card, if a match has not been made, hide the carde
+      // For each child in the card or utensils in recipe obj, if a match has not been made, hide the carde
       let match = 0
+
+      // Checking recipe card
       for (let j = 0; j < children.length; j++) {
-        if (mainSearch.test(children[j].innerText)) { match++ }
+        if (mainSearch.test(children[j].innerText)) {
+          match++
+          // If recipe id is not already in displayed recipes id, add it
+          let checkId = 0
+          for (let d = 0; d < displayedRecipesIds.length; d++) {
+            if (recipeCards[i].dataset.id === displayedRecipesIds[d]) { checkId++ }
+          }
+          if (checkId === 0) { displayedRecipesIds.push(parseInt(recipeCards[i].dataset.id)) }
+        }
       }
+
+      // Display or hide card depending on match status
       if (match === 0) {
         recipeCards[i].classList.add('d-none')
       } else {
@@ -270,11 +295,14 @@ searchbar.addEventListener('input', () => {
           {
             opacity: 1
           }
-        ], 500, 'ease-in-out')
+        ], 700, 'ease-in-out')
       }
       // If input is empty, show all and remove query alert if need be
     } else if (searchbar.value === '') {
       if (recipeCards[i].classList.contains('d-none')) { recipeCards[i].classList.remove('d-none') }
+
+      // If all recipes are displayed, push their id so as to update button lists
+      displayedRecipesIds.push(parseInt(recipeCards[i].dataset.id))
     }
   }
   // If no matches are found (all recipes hidden), display query alert
@@ -297,6 +325,6 @@ searchbar.addEventListener('input', () => {
   } else {
     queryAlert.classList.add('d-none')
   }
+  // Fill buttons with appropriate items from displayed recipes
+  fillBtnList()
 })
-
-// !!! EXPAND SEARCH TO UTENSILS !!!
