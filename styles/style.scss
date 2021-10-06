@@ -84,7 +84,7 @@ a {
 }
 
 .btn-active { 
-  flex: .7;
+  flex: .6;
   .btn-component__arrow { transform: rotate(600grad); }
 }
 
@@ -179,12 +179,6 @@ a {
   &__appliances { background-color: #68d9a4; }
 
   &__utensils { background-color: #Ed6454; }
-}
-
-.fade-out {
-  opacity: 0;
-  display: none;
-  transition: all .3s ease-in-out;
 }
 
 // Imported SCSS Bootstrap file

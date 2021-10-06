@@ -106,9 +106,9 @@ a {
 }
 
 .btn-active {
-  -webkit-box-flex: .7;
-      -ms-flex: .7;
-          flex: .7;
+  -webkit-box-flex: .6;
+      -ms-flex: .6;
+          flex: .6;
 }
 
 .btn-active .btn-component__arrow {
@@ -255,13 +255,6 @@ a {
 
 .tag__utensils {
   background-color: #Ed6454;
-}
-
-.fade-out {
-  opacity: 0;
-  display: none;
-  -webkit-transition: all .3s ease-in-out;
-  transition: all .3s ease-in-out;
 }
 
 /*!

@@ -186,70 +186,116 @@ const fillBtnList = () => {
     .forEach((utensil) => {
       utensilsBtnList.innerHTML += displayItem(utensil)
     })
+
+  // Tag creation & input search event listner
+  btnComponentInput.forEach((input) => {
+    // Selecting appropriate sibling list
+    const btnListItems = input
+      .closest('.input-bloc')
+      .closest('.btn-component')
+      .querySelector('.btn-component__list')
+      .querySelectorAll('.list-item')
+
+    btnListItems.forEach((item) => {
+      // Adding tags on list item click
+      item.addEventListener('click', (event) => {
+        event.preventDefault()
+
+        // Check type of item so as to apply correct background color class
+        let tagType = ''
+        if (item.parentElement === ingredientsBtnList) {
+          tagType = 'tag__ingredients'
+        } else if (item.parentElement === appliancesBtnList) {
+          tagType = 'tag__appliances'
+        } else {
+          tagType = 'tag__utensils'
+        }
+
+        let tagId = item.innerText
+        if (tagId.includes(' ')) {
+          tagId = item.innerText.split(' ').join('')
+        }
+
+        const newTag =
+        `<li class="tag ${tagType}">
+          <span class="tag__name">${item.innerText}</span>
+          <button class="tag__close-button" id="${tagId}">
+            <img src="assets/close-button.svg" alt="">
+          </button>
+        </li>`
+
+        tagsContainer.innerHTML += newTag
+
+        updateTags(item, tagId)
+      })
+    })
+
+    input.addEventListener('input', () => {
+      // Search regex with input value as parameter
+      const search = new RegExp(`(${input.value})`, 'i')
+      console.log(search)
+
+      btnListItems.forEach((item) => {
+        // Hide item if it does not correspond to search regex else, show item
+        !search.test(item.innerText) ? item.classList.add('d-none') : item.classList.remove('d-none')
+
+        // Show all items when input field is empty
+        if (input.value === '' && item.classList.contains('d-none')) { item.classList.remove('d-none') }
+      })
+    })
+  })
 }
 
 // On load, fill buttons with already displayed items
 window.addEventListener('load', fillBtnList())
 
-// Tag creation & input search event listner
-btnComponentInput.forEach((input) => {
-  // Selecting appropriate sibling list
-  const btnListItems = input
-    .closest('.input-bloc')
-    .closest('.btn-component')
-    .querySelector('.btn-component__list')
-    .querySelectorAll('.list-item')
+// Hide displayed recipes that no longer match advanced search
+const updateTags = (item, tagId) => {
+  displayedRecipesIds.forEach((id) => {
+    const matchingRecipe = recipes.filter(el => el.id === id)
+    const matchingCard = mainGrid.querySelector(`.recipe-card[data-id='${id}']`)
 
-  btnListItems.forEach((item) => {
-    // Adding tags on list item click
-    item.addEventListener('click', (event) => {
-      event.preventDefault()
-
-      // Check type of item so as to apply correct background color class
-      let tagType = ''
-      if (item.parentElement === ingredientsBtnList) {
-        tagType = 'tag__ingredients'
-      } else if (item.parentElement === appliancesBtnList) {
-        tagType = 'tag__appliances'
-      } else {
-        tagType = 'tag__utensils'
-      }
-
-      const newTag =
-      `<li class="tag ${tagType}">
-        <span class="tag__name">${item.innerText}</span>
-        <button class="tag__close-button">
-          <img src="assets/close-button.svg" alt="">
-        </button>
-      </li>`
-
-      tagsContainer.innerHTML += newTag
-
-      // Tag close button event
-      const tagCloseBtns = document.querySelectorAll('.tag > .tag__close-button')
-
-      tagCloseBtns.forEach((button) => {
-        button.addEventListener('click', () => {
-          button.closest('.tag').remove()
-        })
+    if (item.parentElement.classList.contains('ingredients-list')) {
+      let ingredientMatch = 0
+      Object.values(matchingRecipe[0].ingredients).forEach((ingredient) => {
+        if (Object.values(ingredient).includes(item.innerText)) { ingredientMatch++ }
       })
-    })
+
+      if (ingredientMatch === 0) {
+        matchingCard.classList.add('d-none')
+        matchingCard.classList.add(`hiddenCard${tagId}`)
+        displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(matchingCard.dataset.id))
+      }
+    } else if (!Object.values(matchingRecipe[0]).includes(item.innerText) &&
+    !Object.values(matchingRecipe[0].ustensils).includes(item.innerText.toLowerCase()) &&
+    !Object.values(matchingRecipe[0].ingredients).includes(item.innerText)) {
+      matchingCard.classList.add('d-none')
+      matchingCard.classList.add(`hiddenCard${tagId}`)
+      displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(matchingCard.dataset.id))
+    }
   })
 
-  input.addEventListener('input', () => {
-    // Search regex with input value as parameter
-    const search = new RegExp(`(${input.value})`, 'i')
-    console.log(search)
+  fillBtnList()
+  // ADD MAINGRID FADE LOAD ANIMATION
+  // ADD DISABLING ALREADY SELECTED ITEM
+  // MAYBE BUTTONS BUG BECAUSE THERE IS NO MATCH FOR SELECTED ITEMS
 
-    btnListItems.forEach((item) => {
-      // Hide item if it does not correspond to search regex else, show item
-      !search.test(item.innerText) ? item.classList.add('d-none') : item.classList.remove('d-none')
+  // Tag close button event
+  const tagCloseBtn = document.getElementById(`${tagId}`)
+  console.log(tagCloseBtn)
+  const hiddenCards = document.querySelectorAll(`.hiddenCard${tagId}`)
 
-      // Show all items when input field is empty
-      if (input.value === '' && item.classList.contains('d-none')) { item.classList.remove('d-none') }
+  tagCloseBtn.addEventListener('click', () => {
+    hiddenCards.forEach((card) => {
+      card.classList.remove('d-none')
+      card.classList.remove(`.hiddenCard${tagId}`)
+      displayedRecipesIds.push(parseInt(card.dataset.id))
     })
+    tagCloseBtn.parentElement.remove()
+    console.log(displayedRecipesIds)
+    fillBtnList()
   })
-})
+}
 
 // Selecting all recipe cards
 const recipeCards = document.querySelectorAll('.recipe-card')
