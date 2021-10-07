@@ -212,9 +212,8 @@ const fillBtnList = () => {
         }
 
         let tagId = item.innerText
-        if (tagId.includes(' ')) {
-          tagId = item.innerText.split(' ').join('')
-        }
+        if (tagId.includes(' ')) { tagId = item.innerText.split(' ').join('') }
+        tagId = tagId.replace('\'', '_')
 
         const newTag =
         `<li class="tag ${tagType}">
@@ -225,7 +224,6 @@ const fillBtnList = () => {
         </li>`
 
         tagsContainer.innerHTML += newTag
-
         updateTags(item, tagId)
       })
     })
@@ -267,8 +265,7 @@ const updateTags = (item, tagId) => {
         displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(matchingCard.dataset.id))
       }
     } else if (!Object.values(matchingRecipe[0]).includes(item.innerText) &&
-    !Object.values(matchingRecipe[0].ustensils).includes(item.innerText.toLowerCase()) &&
-    !Object.values(matchingRecipe[0].ingredients).includes(item.innerText)) {
+    !Object.values(matchingRecipe[0].ustensils).includes(item.innerText.toLowerCase())) {
       matchingCard.classList.add('d-none')
       matchingCard.classList.add(`hiddenCard${tagId}`)
       displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(matchingCard.dataset.id))
@@ -278,22 +275,23 @@ const updateTags = (item, tagId) => {
   fillBtnList()
   // ADD MAINGRID FADE LOAD ANIMATION
   // ADD DISABLING ALREADY SELECTED ITEM
-  // MAYBE BUTTONS BUG BECAUSE THERE IS NO MATCH FOR SELECTED ITEMS
+  // AFTER BTN CLOSE IF CARD IS NOT DISPLAYED BUT MATCHES, DISPLAY IT
 
   // Tag close button event
-  const tagCloseBtn = document.getElementById(`${tagId}`)
-  console.log(tagCloseBtn)
-  const hiddenCards = document.querySelectorAll(`.hiddenCard${tagId}`)
+  const tagCloseBtns = document.querySelectorAll('.tag__close-button')
 
-  tagCloseBtn.addEventListener('click', () => {
-    hiddenCards.forEach((card) => {
-      card.classList.remove('d-none')
-      card.classList.remove(`.hiddenCard${tagId}`)
-      displayedRecipesIds.push(parseInt(card.dataset.id))
+  tagCloseBtns.forEach((button) => {
+    const hiddenCards = document.querySelectorAll(`.hiddenCard${tagId}`)
+
+    button.addEventListener('click', () => {
+      hiddenCards.forEach((card) => {
+        card.classList.remove('d-none')
+        card.classList.remove(`hiddenCard${tagId}`)
+        displayedRecipesIds.push(parseInt(card.dataset.id))
+      })
+      button.parentElement.remove()
+      fillBtnList()
     })
-    tagCloseBtn.parentElement.remove()
-    console.log(displayedRecipesIds)
-    fillBtnList()
   })
 }
 
