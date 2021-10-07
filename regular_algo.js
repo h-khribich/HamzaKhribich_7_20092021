@@ -224,7 +224,7 @@ const fillBtnList = () => {
         </li>`
 
         tagsContainer.innerHTML += newTag
-        updateTags(item, tagId)
+        updateTags(tagId)
       })
     })
 
@@ -248,29 +248,41 @@ const fillBtnList = () => {
 window.addEventListener('load', fillBtnList())
 
 // Hide displayed recipes that no longer match advanced search
-const updateTags = (item, tagId) => {
-  displayedRecipesIds.forEach((id) => {
-    const matchingRecipe = recipes.filter(el => el.id === id)
-    const matchingCard = mainGrid.querySelector(`.recipe-card[data-id='${id}']`)
+const updateTags = (tagId) => {
+  const filtering = () => {
+    const tags = document.querySelectorAll('.tag__name')
+    const cards = document.querySelectorAll('.recipe-card')
 
-    if (item.parentElement.classList.contains('ingredients-list')) {
-      let ingredientMatch = 0
-      Object.values(matchingRecipe[0].ingredients).forEach((ingredient) => {
-        if (Object.values(ingredient).includes(item.innerText)) { ingredientMatch++ }
+    cards.forEach((card) => {
+      let globalMatch = 0
+      tags.forEach((tag) => {
+        const matchingRecipe = recipes.filter(el => el.id === parseInt(card.dataset.id))
+
+        let match = 0
+
+        if (tag.parentElement.classList.contains('tag__ingredients')) {
+          Object.values(matchingRecipe[0].ingredients).forEach((ingredient) => {
+            if (Object.values(ingredient).includes(tag.innerText)) { match++ }
+          })
+        } else if (Object.values(matchingRecipe[0]).includes(tag.innerText) ||
+        Object.values(matchingRecipe[0].ustensils).includes(tag.innerText.toLowerCase())) { match++ }
+
+        if (match > 0) { globalMatch++ }
       })
-
-      if (ingredientMatch === 0) {
-        matchingCard.classList.add('d-none')
-        matchingCard.classList.add(`hiddenCard${tagId}`)
-        displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(matchingCard.dataset.id))
+      if (globalMatch < tags.length) {
+        card.classList.add('d-none')
+        card.classList.add(`hiddenCard${tagId}`)
+        displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(card.dataset.id))
       }
-    } else if (!Object.values(matchingRecipe[0]).includes(item.innerText) &&
-    !Object.values(matchingRecipe[0].ustensils).includes(item.innerText.toLowerCase())) {
-      matchingCard.classList.add('d-none')
-      matchingCard.classList.add(`hiddenCard${tagId}`)
-      displayedRecipesIds = displayedRecipesIds.filter(el => el !== parseInt(matchingCard.dataset.id))
-    }
-  })
+      // Loading effect animation
+      mainGrid.animate([
+        { opacity: '1' },
+        { opacity: '0' },
+        { opacity: '1' }
+      ], 950, 'ease-in-out')
+    })
+  }
+  filtering()
 
   fillBtnList()
   // ADD MAINGRID FADE LOAD ANIMATION
@@ -290,6 +302,7 @@ const updateTags = (item, tagId) => {
         displayedRecipesIds.push(parseInt(card.dataset.id))
       })
       button.parentElement.remove()
+      filtering()
       fillBtnList()
     })
   })
