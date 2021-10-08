@@ -12,7 +12,7 @@ const searchbar = document.getElementById('searchbar')
 const tagsContainer = document.querySelector('.tag__container')
 const queryAlert = document.querySelector('.query-alert')
 let displayedRecipesIds = []
-let mainSearchMatches = []
+let validMatches = []
 
 /* --- BUTTON LISTS ARRAYS --- */
 let ingredientsArray = []
@@ -258,7 +258,7 @@ const updateTags = (tagId) => {
     let recipeList = []
 
     // If input is empty, search all recipes, else, search only in matching recipes
-    searchbar.value === '' ? recipeList = cards : recipeList = mainSearchMatches
+    searchbar.value === '' ? recipeList = cards : recipeList = validMatches
 
     // For each tag, match recipe, if recipe does not match all tags (global match), display it
     recipeList.forEach((card) => {
@@ -352,13 +352,13 @@ searchbar.addEventListener('input', () => {
       // Display or hide card depending on match status and add to main search matches
       if (match === 0) {
         recipeCards[i].classList.add('d-none')
-        mainSearchMatches = mainSearchMatches.filter(el => el.dataset.id !== recipeCards[i].dataset.id)
+        validMatches = validMatches.filter(el => el.dataset.id !== recipeCards[i].dataset.id)
       } else {
         let searchMatch = 0
-        for (let j = 0; j < mainSearchMatches.length; j++) {
-          if (recipeCards[i].dataset.id === mainSearchMatches[j].dataset.id) { searchMatch++ }
+        for (let j = 0; j < validMatches.length; j++) {
+          if (recipeCards[i].dataset.id === validMatches[j].dataset.id) { searchMatch++ }
         }
-        if (searchMatch === 0) { mainSearchMatches.push(recipeCards[i]) }
+        if (searchMatch === 0) { validMatches.push(recipeCards[i]) }
         recipeCards[i].classList.remove('d-none')
         recipeCards[i].animate([
           {
@@ -373,10 +373,10 @@ searchbar.addEventListener('input', () => {
     } else if (searchbar.value === '') {
       if (recipeCards[i].classList.contains('d-none')) { recipeCards[i].classList.remove('d-none') }
       let searchMatch = 0
-      for (let j = 0; j < mainSearchMatches.length; j++) {
-        if (recipeCards[i].dataset.id === mainSearchMatches[j].dataset.id) { searchMatch++ }
+      for (let j = 0; j < validMatches.length; j++) {
+        if (recipeCards[i].dataset.id === validMatches[j].dataset.id) { searchMatch++ }
       }
-      if (searchMatch === 0) { mainSearchMatches.push(recipeCards[i]) }
+      if (searchMatch === 0) { validMatches.push(recipeCards[i]) }
       // If all recipes are displayed, push their id so as to update button lists
       displayedRecipesIds.push(parseInt(recipeCards[i].dataset.id))
     }
@@ -406,6 +406,7 @@ searchbar.addEventListener('input', () => {
       { opacity: '1' }
     ], 500, 'ease-in-out')
   }
-  // Fill buttons with appropriate items from displayed recipes
+  // Fill buttons with appropriate items from displayed recipes and update tags
   fillBtnList()
+  updateTags()
 })
