@@ -12,6 +12,7 @@ const searchbar = document.getElementById('searchbar')
 const tagsContainer = document.querySelector('.tag__container')
 const queryAlert = document.querySelector('.query-alert')
 let displayedRecipesIds = []
+let mainSearchMatches = []
 
 /* --- BUTTON LISTS ARRAYS --- */
 let ingredientsArray = []
@@ -211,6 +212,7 @@ const fillBtnList = () => {
           tagType = 'tag__utensils'
         }
 
+        // Add an id without apostrophes or spaces
         let tagId = item.innerText
         if (tagId.includes(' ')) { tagId = item.innerText.split(' ').join('') }
         tagId = tagId.replace('\'', '_')
@@ -223,6 +225,7 @@ const fillBtnList = () => {
           </button>
         </li>`
 
+        // Add new tag and update filtering
         tagsContainer.innerHTML += newTag
         updateTags(tagId)
       })
@@ -252,14 +255,21 @@ const updateTags = (tagId) => {
   const filtering = () => {
     const tags = document.querySelectorAll('.tag__name')
     const cards = document.querySelectorAll('.recipe-card')
+    let recipeList = []
 
-    cards.forEach((card) => {
+    // If input is empty, search all recipes, else, search only in matching recipes
+    searchbar.value === '' ? recipeList = cards : recipeList = mainSearchMatches
+
+    // For each tag, match recipe, if recipe does not match all tags (global match), display it
+    recipeList.forEach((card) => {
       let globalMatch = 0
+
       tags.forEach((tag) => {
         const matchingRecipe = recipes.filter(el => el.id === parseInt(card.dataset.id))
 
         let match = 0
 
+        // Different loop for ingredients as they are one object deeper
         if (tag.parentElement.classList.contains('tag__ingredients')) {
           Object.values(matchingRecipe[0].ingredients).forEach((ingredient) => {
             if (Object.values(ingredient).includes(tag.innerText)) { match++ }
@@ -282,12 +292,10 @@ const updateTags = (tagId) => {
       ], 950, 'ease-in-out')
     })
   }
+  // Update item lists and relevant recipes
   filtering()
-
   fillBtnList()
-  // ADD MAINGRID FADE LOAD ANIMATION
   // ADD DISABLING ALREADY SELECTED ITEM
-  // AFTER BTN CLOSE IF CARD IS NOT DISPLAYED BUT MATCHES, DISPLAY IT
 
   // Tag close button event
   const tagCloseBtns = document.querySelectorAll('.tag__close-button')
@@ -295,6 +303,7 @@ const updateTags = (tagId) => {
   tagCloseBtns.forEach((button) => {
     const hiddenCards = document.querySelectorAll(`.hiddenCard${tagId}`)
 
+    // On btn close, close all relevant recipes and filter again
     button.addEventListener('click', () => {
       hiddenCards.forEach((card) => {
         card.classList.remove('d-none')
@@ -340,10 +349,16 @@ searchbar.addEventListener('input', () => {
         }
       }
 
-      // Display or hide card depending on match status
+      // Display or hide card depending on match status and add to main search matches
       if (match === 0) {
         recipeCards[i].classList.add('d-none')
+        mainSearchMatches = mainSearchMatches.filter(el => el.dataset.id !== recipeCards[i].dataset.id)
       } else {
+        let searchMatch = 0
+        for (let j = 0; j < mainSearchMatches.length; j++) {
+          if (recipeCards[i].dataset.id === mainSearchMatches[j].dataset.id) { searchMatch++ }
+        }
+        if (searchMatch === 0) { mainSearchMatches.push(recipeCards[i]) }
         recipeCards[i].classList.remove('d-none')
         recipeCards[i].animate([
           {
@@ -357,7 +372,11 @@ searchbar.addEventListener('input', () => {
       // If input is empty, show all and remove query alert if need be
     } else if (searchbar.value === '') {
       if (recipeCards[i].classList.contains('d-none')) { recipeCards[i].classList.remove('d-none') }
-
+      let searchMatch = 0
+      for (let j = 0; j < mainSearchMatches.length; j++) {
+        if (recipeCards[i].dataset.id === mainSearchMatches[j].dataset.id) { searchMatch++ }
+      }
+      if (searchMatch === 0) { mainSearchMatches.push(recipeCards[i]) }
       // If all recipes are displayed, push their id so as to update button lists
       displayedRecipesIds.push(parseInt(recipeCards[i].dataset.id))
     }
@@ -381,6 +400,11 @@ searchbar.addEventListener('input', () => {
     })
   } else {
     queryAlert.classList.add('d-none')
+    // Loading effect animation
+    mainGrid.animate([
+      { opacity: '0' },
+      { opacity: '1' }
+    ], 500, 'ease-in-out')
   }
   // Fill buttons with appropriate items from displayed recipes
   fillBtnList()
