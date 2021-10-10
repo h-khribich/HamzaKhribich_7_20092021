@@ -120,7 +120,7 @@ btnComponent.forEach((btn) => {
 /* --- FILLING BUTTON LISTS --- */
 
 // Display list items
-const displayItem = (item) => `<li class="list-item"><a href="#">${item}</a></li>`
+const displayItem = (item) => `<li class="list-item"><a href="#" class="item-text">${item}</a></li>`
 
 const fillBtnList = () => {
   // Clearing lists for updating
@@ -201,6 +201,7 @@ const fillBtnList = () => {
       // Adding tags on list item click
       item.addEventListener('click', (event) => {
         event.preventDefault()
+        if (item.classList.contains('activeTag')) { return }
 
         // Check type of item so as to apply correct background color class
         let tagType = ''
@@ -227,14 +228,19 @@ const fillBtnList = () => {
 
         // Add new tag and update filtering
         tagsContainer.innerHTML += newTag
-        updateTags(tagId)
+        updateTags(tagId, item)
+      })
+
+      // If tag is already active, add activeTag class to disable it if item is clicked again
+      const tags = document.querySelectorAll('.tag__name')
+      tags.forEach((tag) => {
+        if (tag.innerText === item.innerText) { item.classList.add('activeTag') }
       })
     })
 
     input.addEventListener('input', () => {
       // Search regex with input value as parameter
       const search = new RegExp(`(${input.value})`, 'i')
-      console.log(search)
 
       btnListItems.forEach((item) => {
         // Hide item if it does not correspond to search regex else, show item
@@ -251,7 +257,7 @@ const fillBtnList = () => {
 window.addEventListener('load', fillBtnList())
 
 // Hide displayed recipes that no longer match advanced search
-const updateTags = (tagId) => {
+const updateTags = (tagId, item) => {
   const filtering = () => {
     const tags = document.querySelectorAll('.tag__name')
     const cards = document.querySelectorAll('.recipe-card')
@@ -278,6 +284,9 @@ const updateTags = (tagId) => {
         Object.values(matchingRecipe[0].ustensils).includes(tag.innerText.toLowerCase())) { match++ }
 
         if (match > 0) { globalMatch++ }
+
+        // Add disabled status if tag matches item to prevent further clicking
+        if (tag.innerText === item.innerText) { item.classList.add('activeTag') }
       })
       if (globalMatch < tags.length) {
         card.classList.add('d-none')
@@ -295,7 +304,6 @@ const updateTags = (tagId) => {
   // Update item lists and relevant recipes
   filtering()
   fillBtnList()
-  // ADD DISABLING ALREADY SELECTED ITEM
 
   // Tag close button event
   const tagCloseBtns = document.querySelectorAll('.tag__close-button')
@@ -310,6 +318,8 @@ const updateTags = (tagId) => {
         card.classList.remove(`hiddenCard${tagId}`)
         displayedRecipesIds.push(parseInt(card.dataset.id))
       })
+      // Remove disabled status on item
+      if (item.innerText === button.parentElement.innerText) { item.classList.remove('activeTag') }
       button.parentElement.remove()
       filtering()
       fillBtnList()
@@ -396,7 +406,8 @@ searchbar.addEventListener('input', () => {
       }
     ], {
       duration: 550,
-      easing: 'ease-in-out'
+      easing: 'ease-in-out',
+      fill: 'forwards'
     })
   } else {
     queryAlert.classList.add('d-none')

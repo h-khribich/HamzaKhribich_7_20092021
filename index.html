@@ -16,8 +16,8 @@
   <link href="styles/style.css" rel="stylesheet">
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <!-- JS files & page title-->
-  <script src="recipes.js" type="module" defer></script>
-  <script src="regular_algo.js" type="module" defer></script>
+  <script src="recipes.js" type="module"></script>
+  <script src="regular_algo.js" type="module"></script>
   <title>Les petits plats</title>
 </head>
 
@@ -34,12 +34,12 @@
   </header>
 
   <!-- Searchbar -->
-  <section class="container">
+  <div class="container">
     <div class="row py-1 position-relative">
       <input type="text" placeholder="Rechercher un ingrédient, appareil, ustensil ou une recette" id="searchbar" class="px-4">
       <i class="fas fa-search position-absolute pe-3 top-50 end-0 translate-middle-y" id="searchbar__icon"></i>
     </div>
-  </section>
+  </div>
 
   <!-- Searchbar alert query 'Not found' -->
   <div class="container my-2 d-none query-alert">
@@ -60,34 +60,34 @@
       <div class="btn-container px-0">
 
         <!-- Ingredients button -->
-        <button type="menu" class="btn-component rounded" id="btn-ingredients">
+        <div class="btn-component rounded" id="btn-ingredients">
           <div class="d-flex px-2 py-3 justify-content-between input-bloc">
             <span class="btn-component__name text-white">Ingrédients</span>
             <input type="search" placeholder="Recherchez un ingrédient" class="btn-component__input d-none">
             <span class="btn-component__arrow"><img src="assets/dropdown_arrow.svg" alt=""></span>
           </div>
             <ul class="btn-component__list ingredients-list d-none"></ul>
-        </button>
+        </div>
 
         <!-- Appliances button -->
-        <button type="menu" class="btn-component rounded" id="btn-appliances">
+        <div class="btn-component rounded" id="btn-appliances">
           <div class="d-flex px-2 py-3 justify-content-between input-bloc">
             <span class="btn-component__name text-white">Appareils</span>
             <input type="search" placeholder="Recherchez un appareil" class="btn-component__input d-none">
             <span class="btn-component__arrow"><img src="assets/dropdown_arrow.svg" alt=""></span>
           </div>
           <ul class="appliances-list btn-component__list d-none"></ul>
-        </button>
+        </div>
 
         <!-- Utensils button -->
-        <button type="menu" class="btn-component rounded" id="btn-utensils">
+        <div class="btn-component rounded" id="btn-utensils">
           <div class="d-flex px-2 py-3 justify-content-between input-bloc">
             <span class="btn-component__name text-white">Ustensils</span>
             <input type="search" placeholder="Recherchez un ustensil" class="btn-component__input d-none">
             <span class="btn-component__arrow"><img src="assets/dropdown_arrow.svg" alt=""></span>
           </div>
           <ul class="utensils-list btn-component__list d-none"></ul>
-        </button>
+        </div>
 
       </div>
     </div>

@@ -693,7 +693,7 @@ export const recipes = [
               "unit":"grammes"
           },
           {
-              "ingredient": "huile d'olive",
+              "ingredient": "Huile d'olive",
               "quantity": 1,
               "unit": "cuillères à soupe"
           }
