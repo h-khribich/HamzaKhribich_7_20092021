@@ -338,39 +338,38 @@ searchbar.addEventListener('input', () => {
   displayedRecipesIds = []
 
   // Loop through cards to find search among children's innerText
-  for (let i = 0; i < recipeCards.length; i++) {
+  recipeCards.forEach((recipe) => {
     // Start after input of 3 characters
     if (searchbar.value.length >= 3) {
-      const children = recipeCards[i].childNodes
+      const children = recipe.childNodes
 
-      // For each child in the card or utensils in recipe obj, if a match has not been made, hide the carde
+      // For each child in the card or utensils in recipe obj, if a match has not been made, hide the card
       let match = 0
 
-      // Checking recipe card
-      for (let j = 0; j < children.length; j++) {
-        if (mainSearch.test(children[j].innerText)) {
+      children.forEach((child) => {
+        if (mainSearch.test(child.innerText)) {
           match++
           // If recipe id is not already in displayed recipes id, add it
           let checkId = 0
-          for (let d = 0; d < displayedRecipesIds.length; d++) {
-            if (recipeCards[i].dataset.id === displayedRecipesIds[d]) { checkId++ }
-          }
-          if (checkId === 0) { displayedRecipesIds.push(parseInt(recipeCards[i].dataset.id)) }
+          displayedRecipesIds.forEach((id) => {
+            if (parseInt(recipe.dataset.id) === id) { checkId++ }
+          })
+          if (checkId === 0) { displayedRecipesIds.push(parseInt(recipe.dataset.id)) }
         }
-      }
+      })
 
       // Display or hide card depending on match status and add to main search matches
       if (match === 0) {
-        recipeCards[i].classList.add('d-none')
-        validMatches = validMatches.filter(el => el.dataset.id !== recipeCards[i].dataset.id)
+        recipe.classList.add('d-none')
+        validMatches = validMatches.filter(el => el.dataset.id !== recipe.dataset.id)
       } else {
         let searchMatch = 0
-        for (let j = 0; j < validMatches.length; j++) {
-          if (recipeCards[i].dataset.id === validMatches[j].dataset.id) { searchMatch++ }
-        }
-        if (searchMatch === 0) { validMatches.push(recipeCards[i]) }
-        recipeCards[i].classList.remove('d-none')
-        recipeCards[i].animate([
+        validMatches.forEach((match) => {
+          if (recipe.dataset.id === match.dataset.id) { searchMatch++ }
+        })
+        if (searchMatch === 0) { validMatches.push(recipe) }
+        recipe.classList.remove('d-none')
+        recipe.animate([
           {
             opacity: 0
           },
@@ -381,16 +380,16 @@ searchbar.addEventListener('input', () => {
       }
       // If input is empty, show all and remove query alert if need be
     } else if (searchbar.value === '') {
-      if (recipeCards[i].classList.contains('d-none')) { recipeCards[i].classList.remove('d-none') }
+      if (recipe.classList.contains('d-none')) { recipe.classList.remove('d-none') }
       let searchMatch = 0
-      for (let j = 0; j < validMatches.length; j++) {
-        if (recipeCards[i].dataset.id === validMatches[j].dataset.id) { searchMatch++ }
-      }
-      if (searchMatch === 0) { validMatches.push(recipeCards[i]) }
+      validMatches.forEach((match) => {
+        if (recipe.dataset.id === match.dataset.id) { searchMatch++ }
+      })
+      if (searchMatch === 0) { validMatches.push(recipe) }
       // If all recipes are displayed, push their id so as to update button lists
-      displayedRecipesIds.push(parseInt(recipeCards[i].dataset.id))
+      displayedRecipesIds.push(parseInt(recipe.dataset.id))
     }
-  }
+  })
   // If no matches are found (all recipes hidden), display query alert
   if (!mainGrid.querySelector('div.recipe-card:not(.d-none)')) {
     queryAlert.classList.remove('d-none')
